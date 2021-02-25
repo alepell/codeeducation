@@ -1,0 +1,14 @@
+FROM golang:1.16-alpine AS builder
+
+WORKDIR /go/src/app
+
+RUN touch fullcycle.go \
+  && echo 'package main; import "fmt"; func main() {fmt.Println("Code.education Rocks!")}' >> fullcycle.go \
+  && go build fullcycle.go
+
+FROM scratch
+WORKDIR /home
+
+COPY --from=builder /go/src/app/fullcycle .
+
+CMD [ "./fullcycle" ]
